@@ -1,1 +1,93 @@
-f
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Standings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+        table {
+            width: 100%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>NBA Standings</h1>
+    <table id="nba-standings">
+        <thead>
+            <tr>
+                <th>Team</th>
+                <th>Conference</th>
+                <th>Wins</th>
+                <th>Losses</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- NBA standings will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // NBA 순위를 가져오는 API URL
+        const apiUrl = 'https://www.balldontlie.io/api/v1/standings';
+
+        // API에서 데이터를 가져오는 함수
+        async function fetchNBAStandings() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                const standings = data.data;
+                const tableBody = document.querySelector('#nba-standings tbody');
+
+                // 테이블을 비우고 순위 데이터를 추가
+                tableBody.innerHTML = '';
+                standings.forEach(team => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${team.team.name}</td>
+                        <td>${team.conference}</td>
+                        <td>${team.wins}</td>
+                        <td>${team.losses}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching NBA standings:', error);
+            }
+        }
+
+        // 페이지 로드 시 NBA 순위 데이터를 가져옵니다.
+        window.onload = fetchNBAStandings;
+    </script>
+
+</body>
+</html>
